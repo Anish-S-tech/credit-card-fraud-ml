@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBank – Fraud Detection Dashboard</title>
+  <meta name="description" content="Real-time credit card fraud detection and transaction risk scoring dashboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════  DASHBOARD  ═══════════════════════ -->
+  <section id="dashboard-page">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <div class="logo-icon small">
+          <svg viewBox="0 0 40 40" fill="none">
+            <rect x="4" y="10" width="32" height="22" rx="4" stroke="currentColor" stroke-width="2.5" />
+            <path d="M4 16h32" stroke="currentColor" stroke-width="2.5" />
+            <circle cx="12" cy="24" r="2" fill="currentColor" />
+          </svg>
+        </div>
+        <span class="logo-text">Secure<strong>Bank</strong></span>
+      </div>
+      <div class="nav-right">
+        <span class="nav-user" id="nav-user-name">John Doe</span>
+      </div>
+    </nav>
+
+    <main class="dashboard-container">
+
+      <!-- ── Customer Profile Card ── -->
+      <div class="card profile-card animate-in">
+        <div class="card-header">
+          <h2>Customer Profile</h2>
+          <span class="badge badge-info" id="profile-risk-badge">Low Risk</span>
+        </div>
+        <div class="profile-body">
+          <div class="avatar" id="profile-avatar">JD</div>
+          <div class="profile-details">
+            <div class="detail-row">
+              <span class="detail-label">Customer Name</span>
+              <span class="detail-value" id="profile-name">John Doe</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Customer ID</span>
+              <span class="detail-value" id="profile-id">CB-482917</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Home City</span>
+              <span class="detail-value" id="profile-city">New York</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Account Type</span>
+              <span class="detail-value">Premium Banking</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Two-column layout: Form + Result ── -->
+      <div class="grid-2">
+
+        <!-- New Transaction Form -->
+        <div class="card animate-in" style="animation-delay:.1s">
+          <div class="card-header">
+            <h2>💳 New Transaction</h2>
+          </div>
+          <form id="transaction-form">
+            <div class="form-group">
+              <label for="txn-amount">Transaction Amount ($)</label>
+              <input type="number" id="txn-amount" placeholder="0.00" min="0" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="txn-merchant">Merchant</label>
+              <select id="txn-merchant" required>
+                <option value="" disabled selected>Select merchant</option>
+                <option>Amazon</option>
+                <option>Walmart</option>
+                <option>Target</option>
+                <option>Best Buy</option>
+                <option>Apple Store</option>
+                <option>Starbucks</option>
+                <option>Shell Gas</option>
+                <option>Uber</option>
+                <option>Netflix</option>
+                <option>Unknown Vendor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="txn-category">Category</label>
+              <select id="txn-category" required>
+                <option value="" disabled selected>Select category</option>
+                <option>Shopping</option>
+                <option>Groceries</option>
+                <option>Electronics</option>
+                <option>Entertainment</option>
+                <option>Travel</option>
+                <option>Food & Dining</option>
+                <option>Gas & Fuel</option>
+                <option>Online Services</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="txn-city">Transaction City</label>
+              <select id="txn-city" required>
+                <option value="" disabled selected>Select city</option>
+                <option>New York</option>
+                <option>Los Angeles</option>
+                <option>Chicago</option>
+                <option>Houston</option>
+                <option>San Francisco</option>
+                <option>Miami</option>
+                <option>Seattle</option>
+                <option>London</option>
+                <option>Tokyo</option>
+              </select>
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="btn btn-primary" id="analyze-btn">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                  <path fill-rule="evenodd"
+                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span>Analyze Transaction</span>
+              </button>
+              <button type="reset" class="btn btn-ghost" id="reset-btn">Reset</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Risk Result Panel (hidden until prediction) -->
+        <div class="card result-card animate-in" id="result-panel" style="animation-delay:.2s">
+          <div class="card-header">
+            <h2>🎯 Risk Analysis</h2>
+          </div>
+
+          <!-- Loading state -->
+          <div class="result-loading" id="result-loading">
+            <div class="spinner"></div>
+            <p>Analyzing transaction…</p>
+          </div>
+
+          <!-- Placeholder state -->
+          <div class="result-placeholder" id="result-placeholder">
+            <svg viewBox="0 0 80 80" fill="none" width="80" height="80">
+              <circle cx="40" cy="40" r="36" stroke="var(--border)" stroke-width="3" stroke-dasharray="6 4" />
+              <path d="M30 42l6 6 14-14" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <p>Submit a transaction to see the risk analysis</p>
+          </div>
+
+          <!-- Result content (hidden initially) -->
+          <div class="result-content" id="result-content">
+            <!-- Gauge -->
+            <div class="gauge-wrapper">
+              <div class="gauge" id="risk-gauge">
+                <div class="gauge-fill" id="gauge-fill"></div>
+                <div class="gauge-center">
+                  <span class="gauge-value" id="gauge-value">0</span>
+                  <span class="gauge-label">Risk Score</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detail cards -->
+            <div class="risk-details">
+              <div class="risk-detail-item">
+                <span class="rdl">Fraud Probability</span>
+                <span class="rdv" id="rd-probability">—</span>
+              </div>
+              <div class="risk-detail-item">
+                <span class="rdl">Risk Level</span>
+                <span class="rdv" id="rd-level">—</span>
+              </div>
+              <div class="risk-detail-item full-width">
+                <span class="rdl">Decision</span>
+                <div class="decision-badge" id="rd-decision">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Transaction History ── -->
+      <div class="card animate-in" style="animation-delay:.3s">
+        <div class="card-header">
+          <h2>📊 Transaction History</h2>
+          <span class="badge badge-neutral" id="history-count">0 records</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Merchant</th>
+                <th>Risk Score</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="history-body">
+              <tr class="empty-row" id="empty-row">
+                <td colspan="5">No transactions yet. Analyze a transaction to see results here.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="dashboard-footer">
+      <p>&copy; 2026 SecureBank · Fraud Detection Division · All rights reserved</p>
+    </footer>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

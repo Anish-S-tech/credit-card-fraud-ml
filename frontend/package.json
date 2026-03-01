@@ -1,0 +1,8 @@
+{
+    "name": "fraud-detection-frontend",
+    "version": "1.0.0",
+    "description": "SecureBank Fraud Detection Dashboard",
+    "scripts": {
+        "dev": "npx -y http-server . -p 8090 -c-1 --cors -o"
+    }
+}
